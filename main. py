@@ -1,0 +1,86 @@
+
+from kivy.app import App
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.label import Label
+from kivy.uix.textinput import TextInput
+from kivy.uix.button import Button
+from kivy.uix.popup import Popup
+
+LESSONS = {
+    "Cybersecurity": "Cybersecurity protects computers, networks and data.\n\nSteps:\n1. Prevent threats\n2. Detect attacks\n3. Protect systems\n4. Respond to incidents\n5. Recover safely",
+    "Sales and Marketing": "Sales means selling products or services.\n\nMarketing means attracting customers.\n\nSteps:\n1. Understand customers\n2. Promote products\n3. Communicate clearly\n4. Make sales\n5. Collect feedback",
+    "Python": "Python is a beginner-friendly programming language.\n\nSteps:\n1. Learn variables\n2. Learn data types\n3. Use if conditions\n4. Learn loops\n5. Build projects"
+}
+
+class YadheenApp(App):
+    def build(self):
+        self.title = "YADHEEN Learning"
+        root = BoxLayout(orientation="vertical", padding=20, spacing=12)
+
+        root.add_widget(Label(
+            text="YADHEEN LEARNING",
+            font_size=26,
+            size_hint_y=None,
+            height=60
+        ))
+
+        root.add_widget(Label(
+            text="Learn something new every day!",
+            size_hint_y=None,
+            height=35
+        ))
+
+        self.search = TextInput(
+            hint_text="Search: Cybersecurity, Python...",
+            size_hint_y=None,
+            height=50,
+            multiline=False
+        )
+        root.add_widget(self.search)
+
+        btn = Button(
+            text="SEARCH LESSON",
+            size_hint_y=None,
+            height=50
+        )
+        btn.bind(on_press=self.search_lesson)
+        root.add_widget(btn)
+
+        for topic in LESSONS:
+            button = Button(
+                text=topic,
+                size_hint_y=None,
+                height=48
+            )
+            button.bind(
+                on_press=lambda instance, t=topic:
+                self.show_lesson(t)
+            )
+            root.add_widget(button)
+
+        return root
+
+    def search_lesson(self, instance):
+        query = self.search.text.strip().lower()
+        for topic in LESSONS:
+            if query in topic.lower() and query:
+                self.show_lesson(topic)
+                return
+
+        Popup(
+            title="Search",
+            content=Label(text="Topic not found. Try Python!"),
+            size_hint=(0.8, 0.35)
+        ).open()
+
+    def show_lesson(self, topic):
+        Popup(
+            title=topic,
+            content=Label(
+                text=LESSONS[topic],
+                text_size=(300, None)
+            ),
+            size_hint=(0.9, 0.7)
+        ).open()
+
+YadheenApp().run()
